@@ -2,6 +2,7 @@
 import git
 import logging
 import os
+import sys
 import shutil
 
 
@@ -29,7 +30,7 @@ class Source(object):
     source_path = None
 
     @staticmethod
-    def validate_attrs(**kwargs):
+    def validate_attributes(**kwargs):
         """
         Валидация параметров взаимодействия с истоником, которые понадобятся для его "copy_to_local"
         :param kwargs: параметры взаимодействия с истоником, которые понадобятся для его "copy_to_local"
@@ -50,7 +51,7 @@ class Source(object):
         :param kwargs: параметры взаимодействия с истоником, которые понадобятся для его "copy_to_local"
         """
         try:
-            self.__class__.validate_attrs(**kwargs)
+            self.__class__.validate_attributes(**kwargs)
             for k in kwargs:
                 self.__setattr__(k, kwargs[k])
         except Exception as e:
@@ -96,13 +97,13 @@ class LocalFilesystemSource(Source):
         shutil.copytree(self.source_path, target_source_full_path)
 
     @staticmethod
-    def validate_attrs(**kwargs):
+    def validate_attributes(**kwargs):
         """
         Дополнительная к родительской валидация на предмет физического существования источника
         :param kwargs: параметры взаимодействия с истоником, которые понадобятся для его "copy_to_local"
         :return: либо подтверждает валидность либо генерирует соответствующее исключение
         """
-        if Source.validate_attrs(**kwargs):
+        if Source.validate_attributes(**kwargs):
             if not os.path.exists(kwargs['source_path']):
                 raise Exception('"source_path" "%s" не существует' % kwargs['source_path'])
         return True
@@ -119,21 +120,23 @@ if __name__ == '__main__':
     rootLogger.addHandler(consoleHandler)
 
     # Test GitHubSource
+    try:
+        from_source = 'https://github.com/Melevir/python-image-restoration/'
 
-    from_source = 'https://github.com/Melevir/python-image-restoration/'
+        to_target = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
+            'downloads'
+        )
+        rootLogger.info('START')
+        rootLogger.info('COPY FROM "%s" TO "%s"' % (from_source, to_target))
 
-    to_target = os.path.join(
-        os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))),
-        'downloads'
-    )
-    rootLogger.info('START')
-    rootLogger.info('COPY FROM "%s" TO "%s"' % (from_source, to_target))
-
-    src = GitHubSource(
-        source_path=from_source
-    )
-    src.copy_to_local(to_target, delete_if_exists=True)
-    rootLogger.info('DONE')
+        src = GitHubSource(
+            source_path=from_source
+        )
+        src.copy_to_local(to_target, delete_if_exists=True)
+        rootLogger.info('DONE')
+    except:
+        rootLogger.error(sys.exc_info()[1])
 
     # Test LocalFilesystemSource
 
