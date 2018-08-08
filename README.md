@@ -235,8 +235,50 @@ src.copy_to_local(to_target, delete_if_exists=True)
 
 #### Пример №5
 
-Подготовка отчетов статического анализа кода
+Подготовка отчетов статического анализа кода.
+Отчеты могут быть выведены в CSV-файлы, JSON-файлы или консоль.
+Для этого используовать "примеси":
 
+* ConsoleExportFormatMixin(ExportFormatMixin):
+* CsvFileExportFormatMixin(ExportFormatMixin):
+* JsonFileExportFormatFileMixin(ExportFormatMixin):
+
+Например, возможно динамически создать класс отчета с примесью формата экспорта,
+заодно для простоты вызова реализуем в нем метод, инкапсулирующий в себе
+загрузку, подсчет и экспорт данных
+Формально: условия использования примесей соблюдены, при это не надо плодить миксы для подсчета частей речи
+в сущностях статического кода
+
+```python
+class CsvReportClass(CsvFileExportFormatMixin, Report):
+    pass
+class JsonReportClass(JsonExportFormatFileMixin, Report):
+    pass
+class ConsoleReportClass(ConsoleExportFormatMixin, Report):
+    pass
+```
+
+подробнее смтори пример [example_202_report_work.py](https://github.com/BorisPlus/otus_webpython_001/tree/master/example_usage/example_202_report_work.py)
+
+```python
+class MixedReportClass(export_class_mixin, Report):
+    def quick(self, top_report_data=5, report_name='Dynamic MixedReportClass'):
+        self.load_source_data()
+        self.build_report_data(top_report_data=top_report_data)
+        self._export_report(report_name=report_name)
+
+
+mixed_report = MixedReportClass(
+    source_code_paths=set(paths_to_analyze),
+    entities_extractor_function=use_entities_extractor_function,
+    terms_extractor_function=use_terms_extractor_function,
+    files_top_limit=files_top_limit_to_analyze,
+    files_extensions=extensions_to_analyze
+)
+
+mixed_report.quick(top_report_data=use_top_report_data, report_name='Dynamic ReportClass')
+
+```
 
 ## Авторы
 

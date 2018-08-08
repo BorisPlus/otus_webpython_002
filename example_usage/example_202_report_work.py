@@ -3,17 +3,23 @@ import sys
 import logging
 import getopt
 
-from static_code_terms_analyzer.core.reports import (
-    Report,
-    CsvFileExportFormatMixin,
-    ConsoleExportFormatMixin,
-    JsonFileExportFormatFileMixin,
+from static_code_terms_analyzer.scta import (
     get_variable_nodes_names_at_lowercase_of_trees,
     get_function_def_nodes_names_at_lowercase,
     get_all_nodes_names_at_lowercase_of_trees,
     get_nouns_from_statements,
     get_verbs_from_statements,
-    get_words_from_statements,
+    get_words_from_statements
+
+)
+from static_code_terms_analyzer.core.export_format_mixin import (
+    ConsoleExportFormatMixin,
+    CsvFileExportFormatMixin,
+    JsonFileExportFormatFileMixin,
+)
+
+from static_code_terms_analyzer.core.reports import (
+    Report,
 )
 
 if __name__ == '__main__':
