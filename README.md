@@ -279,7 +279,19 @@ mixed_report = MixedReportClass(
 mixed_report.quick(top_report_data=use_top_report_data, report_name='Dynamic ReportClass')
 
 ```
-
+РЕЗУЛЬТАТ ДЛЯ JSON-ФАЙЛА
+```json
+["rootlogger", 62]
+["top", 35]
+["sys", 33]
+["path", 32]
+["os", 28]
+["consolehandler", 24]
+["limit", 24]
+["words", 23]
+["options", 22]
+["len", 22]
+```
 ## Авторы
 
 * **Melevir** - *Initial work* - [Melevir](https://gist.github.com/Melevir/5754a1b553eb11839238e43734d0eb79)
