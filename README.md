@@ -245,7 +245,7 @@ src.copy_to_local(to_target, delete_if_exists=True)
 
 Например, возможно динамически создать класс отчета с примесью формата экспорта,
 заодно для простоты вызова реализуем в нем метод, инкапсулирующий в себе
-загрузку, подсчет и экспорт данных
+загрузку, подсчет и экспорт данных.
 Формально: условия использования примесей соблюдены, при это не надо плодить миксы для подсчета частей речи
 в сущностях статического кода
 
@@ -261,6 +261,20 @@ class ConsoleReportClass(ConsoleExportFormatMixin, Report):
 подробнее смтори пример [example_202_report_work.py](https://github.com/BorisPlus/otus_webpython_001/tree/master/example_usage/example_202_report_work.py)
 
 ```python
+export_type = 'json'
+ # Доступные форматы экспорта отчетов
+export_classes_mixin = dict(
+    csv=CsvFileExportFormatMixin,
+    json=JsonFileExportFormatFileMixin,
+    console=ConsoleExportFormatMixin,
+    default=ConsoleExportFormatMixin,
+)
+# Указанный формат экспорта отчета
+export_class_mixin = export_classes_mixin.get(
+    export_type,
+    export_classes_mixin.get('default'),
+)
+        
 class MixedReportClass(export_class_mixin, Report):
     def quick(self, top_report_data=5, report_name='Dynamic MixedReportClass'):
         self.load_source_data()
