@@ -3,6 +3,9 @@ import sys
 import logging
 import getopt
 
+module_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if module_path not in sys.path:
+    sys.path.append(module_path)
 from static_code_terms_analyzer.scta import (
     get_variable_nodes_names_at_lowercase_of_trees,
     get_function_def_nodes_names_at_lowercase,

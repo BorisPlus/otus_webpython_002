@@ -2,6 +2,9 @@ import sys
 import os
 import logging
 
+module_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if module_path not in sys.path:
+    sys.path.append(module_path)
 from static_code_terms_analyzer.scta import (
     get_top_verbs_of_functions_names_in_path,
     get_top_nouns_of_variables_names_in_path,
