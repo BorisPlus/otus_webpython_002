@@ -60,7 +60,7 @@ python3
 Скопируйте к себе в проект папку static_code_terms_analyzer или установите иным известным Вам и возможным образом.
 ### Примеры
 
-См. директорию [example_usage](https://github.com/BorisPlus/otus_webpython_001/tree/master/example_usage)
+См. директорию [example_usage](https://github.com/BorisPlus/otus_webpython_002/tree/master/example_usage)
 
 
 #### Пример №1
@@ -258,7 +258,7 @@ class ConsoleReportClass(ConsoleExportFormatMixin, Report):
     pass
 ```
 
-подробнее смтори пример [example_202_report_work.py](https://github.com/BorisPlus/otus_webpython_001/tree/master/example_usage/example_202_report_work.py)
+подробнее смтори пример [example_202_report_work.py](https://github.com/BorisPlus/otus_webpython_002/tree/master/example_usage/example_202_report_work.py)
 
 ```python
 export_type = 'json'
@@ -306,9 +306,43 @@ mixed_report.quick(top_report_data=use_top_report_data, report_name='Dynamic Rep
 ["options", 22]
 ["len", 22]
 ```
+
+Или же Вы просто могли использовать замиксованный отчет, которому добавили смесь на экспорт полученный данны
+в Json-файл
+        
+```python
+class JsonReportClass(JsonExportFormatFileMixin, Report):
+    def quick(self, top_report_data=5, report_name='Dynamic MixedReportClass'):
+        self.load_source_data()
+        self.build_report_data(top_report_data=top_report_data)
+        self._export_report(report_name=report_name)
+
+
+mixed_report = JsonReportClass(
+    source_code_paths=set(paths_to_analyze),
+    entities_extractor_function=use_entities_extractor_function,
+    terms_extractor_function=use_terms_extractor_function,
+    files_top_limit=files_top_limit_to_analyze,
+    files_extensions=extensions_to_analyze
+)
+
+mixed_report.quick(top_report_data=use_top_report_data, report_name='Dynamic ReportClass')
+```
+, где:
+* paths_to_analyze - полный путь до директории
+* entities_extractor_function - одна из доступных в SCTA функций извлечения сущностей кода (функции, переменные, без разницы) из AST-дерева
+    * get_variable_nodes_names_at_lowercase_of_trees - взять все имена переменных в коде в нижнем регистре
+    * get_function_def_nodes_names_at_lowercase - взять все имена функций в коде в нижнем регистре
+    * get_all_nodes_names_at_lowercase_of_trees - взять все имена в коде в нижнем регистре
+* use_terms_extractor_function - одна из доступных в SCTA функций извлечения частей речи (существительные, глаголы, без разницы) из предложений. 
+При этом извлечение происходит из snake_case нотации, разбивая полное имя на слова.
+    * get_nouns_from_statements - извлечь существительные
+    * get_verbs_from_statements - извлечь глаголы
+    * get_words_from_statements - извлечь слова
+* files_top_limit_to_analyze - сколько первых в списке файлов в исходном коде необходимо подвергунть анализу
+* files_extensions - кортеж расширений файлов, например ('.py',)
 ## Авторы
 
-* **Melevir** - *Initial work* - [Melevir](https://gist.github.com/Melevir/5754a1b553eb11839238e43734d0eb79)
 * **BorisPlus** - *Доработка по домашнему заданию №1* - [BorisPlus](https://github.com/BorisPlus/otus_webpython_001)
 * **BorisPlus** - *Доработка по домашнему заданию №2* - [BorisPlus](https://github.com/BorisPlus/otus_webpython_002)
 
